@@ -198,3 +198,7 @@ html,body {
 .fa-comment {
     font-size: 1rem; /* FontAwesome ikon boyutu */
 }
+
+.login-row {
+    align-items: center;
+}

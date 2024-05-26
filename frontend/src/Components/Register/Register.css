@@ -1,0 +1,54 @@
+  body {
+    background-color: #ffffff;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .register-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 50px;
+    margin-top: 50px;
+  }
+  
+  .register-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    width: calc(100% - 20px);
+  }
+  
+  .form-control-label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: var(--text-color);
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+  }
+  
+  .btn-primary {
+    background-color: rgb(85, 125, 255);
+    border-color: white; /* Kenar çizgisinin rengi */
+    width: 100%;
+    margin: 15px auto;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  

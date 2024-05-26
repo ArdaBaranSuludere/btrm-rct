@@ -13,10 +13,10 @@ const Navbar = () => {
                     <li><Link to="/">Kaydedilenler</Link></li>
                     <li><Link to="/myProfile.html">Profilim</Link></li>
                     <li><Link to="/">Blog Yaz</Link></li>
-                    <li><Link to="/">Admin Panel</Link></li>
-                    <li><Link to="/logout.html">Logout</Link></li>
-                    {/* <li><Link to="/login.html">Login</Link></li> */}
-                    {/* <li><Link to="/register.html">Register</Link></li> */}
+                    {/* <li><Link to="/">Admin Panel</Link></li> */}
+                    {/* <li><Link to="/logout.html">Logout</Link></li> */}
+                    <li><Link to="/login.html">Login</Link></li>
+                    <li><Link to="/register.html">Register</Link></li>
                 </ul>
             </nav>
         </header>
