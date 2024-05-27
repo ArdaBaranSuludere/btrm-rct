@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import './Register.css'
+import './register-style.css'
+
 
 const RegisterForm = () => {
     const [email, setEmail] = useState("");
@@ -38,27 +39,31 @@ const RegisterForm = () => {
     };
   
     return (
-      <div className="register-container"> {/* className kullanarak sınıf ekledik */}
-        <div className="login-header">
-              <h2>Register</h2>
-              <p className="lead">Sign up</p>
-            </div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor='email' className="form-label">Email:</label> {/* className kullanarak sınıf ekledik */}
-            <input type="text" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" /> {/* className kullanarak sınıf ekledik */}
-          </div>
-          <div>
-            <label htmlFor='username' className="form-label">Username:</label> {/* className kullanarak sınıf ekledik */}
-            <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" /> {/* className kullanarak sınıf ekledik */}
-          </div>
-          <div>
-            <label htmlFor='password_hash' className="form-label">Password:</label> {/* className kullanarak sınıf ekledik */}
-            <input type="password" id="password_hash" value={passwordHash} onChange={(e) => setPasswordHash(e.target.value)} className="form-control" /> {/* className kullanarak sınıf ekledik */}
-          </div>
-          <button type="submit" className="btn-primary">Register</button>
-        </form>
+
+      <div className="register-container">
+        <div className="register-wrapper">
+            <form action="">
+                <h1>Register</h1>
+                <div className="register-input-box">
+                    <input type="email" placeholder="Email" required />
+                    <i className='bx bx-envelope'></i>
+                </div>
+                <div className="register-input-box">
+                    <input type="text" placeholder="Username" required />
+                    <i className='bx bxs-user'></i>
+                </div>
+                <div className="register-input-box">
+                    <input type="password" placeholder="Password" required />
+                    <i className='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit" className="register-btn">Register</button>
+                <div className="register-register-link">
+                    <p>Already have an account? <a href="/login.html">Login</a></p>
+                </div>
+            </form>
+        </div>
       </div>
+      
     );
   };
   
