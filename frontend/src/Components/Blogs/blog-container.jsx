@@ -5,8 +5,6 @@ const BlogContainer = () => {
     return (
         <div className="blog-container">
             <BlogBox />
-            <BlogBox />
-            <BlogBox />
         </div>
     );
 };

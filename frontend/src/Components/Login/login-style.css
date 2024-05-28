@@ -19,7 +19,9 @@
   }
 
 .login-wrapper {
-  width: 420px;
+  /* width: 420px; */
+  width: 90%;
+  max-width: 420px;
   background: transparent;
   border: 2px solid rgba(255, 255, 255, .2);
   backdrop-filter: blur(20px);
@@ -27,6 +29,7 @@
   color: #fff;
   border-radius: 10px;
   padding: 30px 40px;
+  margin: 20px;
 }
 
 .login-wrapper h1 {
@@ -114,4 +117,25 @@
 
 .login-register-link p a:hover {
     text-decoration: underline;
+}
+
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .login-wrapper {
+        padding: 20px;
+    }
+
+    .login-wrapper h1 {
+        font-size: 28px;
+    }
+
+    .login-wrapper .login-input-box {
+        height: 45px;
+        margin: 20px 0;
+    }
+
+    .login-input-box input {
+        padding: 15px 40px 15px 15px;
+    }
 }
