@@ -1,5 +1,7 @@
 from config import db
 from flask import jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class User(db.Model):
     table_args = {'extend_existing': True}
@@ -10,6 +12,12 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     photograph = db.Column(db.String(255))  # Dosya yolu için String tipinde bir sütun
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+        
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
     def to_dict(self):
         return {
             'id': self.id,
