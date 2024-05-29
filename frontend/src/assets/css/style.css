@@ -72,7 +72,6 @@ html,body {
 .blog-container {
     display: flex; /* Blog kutularını yan yana sıralamak için */
     flex-wrap: wrap; /* Eğer alan yetmiyorsa alt satıra geçsin */
-    border: 1px solid #ccc;
     width: 100%;
     box-sizing: border-box;
     
