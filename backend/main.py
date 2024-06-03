@@ -1,7 +1,13 @@
-from flask import Flask, jsonify,request
+from flask import Flask, jsonify,request,session
 from config import app, db
 from models import Blogs,User
+from flask_session import Session
+from flask_login import logout_user
+from flask import request
+from flask_cors import CORS
+import traceback, os
 
+app.secret_key = os.urandom(24)
 
 
 @app.route('/api/users', methods=['GET'])
@@ -22,6 +28,33 @@ def get_blogs():
 def find_user(username):
     return User.query.filter_by(username=username).first()
 
+
+@app.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user_by_id(user_id):
+    user = User.query.get(user_id)
+    if user:
+        return jsonify(user.to_dict())
+    else:
+        return jsonify({'message': 'User not found'}), 404
+    
+
+@app.route('/api/user_blogs', methods=['GET'])
+def get_user_blogs():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'message': 'User not logged in!'}), 401
+
+    blogs = Blogs.query.filter_by(author_id=user_id).all()
+    blogs_list = []
+    for blog in blogs:
+        author = User.query.get(blog.author_id)
+        blog_data = blog.to_dict()
+        blog_data['author_name'] = author.username
+        blogs_list.append(blog_data)
+
+    return jsonify(blogs_list), 200
+
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -34,15 +67,28 @@ def login():
         return jsonify({'message': 'Missing username, email, or password!'}), 400
 
     user = User.query.filter_by(username=username, email=email).first()
-
+    print(user.id)
     if user and user.check_password(password):
-        return jsonify({'message': 'Login successful!'}), 200
+        session['user_id'] = user.id  # Store user_id in the session
+        return jsonify({
+            'message': 'Login successful!',
+            'isLoggedIn': True,
+            'isAdmin': user.is_admin  # Assuming 'is_admin' is a property on the User model
+        }), 200
     else:
         return jsonify({'message': 'Login failed!'}), 401
     
 
+@app.route('/checkauth', methods=['GET'])
+def checkauth():
+    user_id = session.get('user_id')
+    print(f"Session user_id: {user_id}")
+    
+    if 'user_id' in session:
+        return jsonify({'isLoggedIn': True}), 200
+    else:
+        return jsonify({'isLoggedIn': False}), 401
 
-from flask import request
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -72,13 +118,19 @@ def register():
     return jsonify({'message': 'User registered successfully!'}), 201
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET'])
 def logout():
-    # Burada ek bir işlem yapmanız gerekmeyebilir.
-    # Tarayıcıda oturum yönetimi genellikle ön uç tarafında yapılır.
-    # Oturum yönetimi için Flask-Login gibi bir kütüphane kullanabilirsiniz.
+    session.pop('user_id', None)  # Remove user_id from the session
     return jsonify({'message': 'Logout successful!'}), 200
 
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({
+        'message': 'An internal error occurred',
+        'details': str(error),
+        'trace': traceback.format_exc()
+    }), 500
 
 
 if __name__ == "__main__":
