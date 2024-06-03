@@ -1,45 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './login-style.css';
+import { useAuthContext } from '../../Hooks/auth';
+
 
 const Login = () => {
-  const [loginResult, setLoginResult] = useState('');
+    const navigate = useNavigate();
+    const { login } = useAuthContext();
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const username = formData.get('username');
-    const email = formData.get('email');
-    const password = formData.get('password');
-
-    // Send login data to the backend for authentication
-    try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const body = JSON.stringify({
+          username: formData.get("username"),
+          email: formData.get("email"),
+          password: formData.get("password")
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setLoginResult('Login successful!');
-        window.location.href = '/'; // Redirect to home page after successful login
-      } else {
-        setLoginResult(data.message || 'Login failed!');
+      const success = await login(body);
+      if (success) {
+          navigate("/");
       }
-    } catch (error) {
-      console.error('Error during login:', error);
-      setLoginResult('An error occurred during login.');
-    }
-  };
+  }
 
   return (
     <div className="login-container">
       <div className="login-wrapper">
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
           <h1>Login</h1>
           <div className="login-input-box">
             <input type="email" name="email" placeholder="Email" required />
@@ -57,11 +43,10 @@ const Login = () => {
           <div className="login-register-link">
             <p>Don't have an account? <a href="/register.html"> Register</a></p>
           </div>
-          {loginResult && <p>{loginResult}</p>}
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default Login;
