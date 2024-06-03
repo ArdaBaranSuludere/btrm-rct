@@ -101,6 +101,7 @@
     font-size: 16px;
     color: #333;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .login-wrapper .login-register-link {
