@@ -6,6 +6,7 @@ import MyProfilePage from './Components/MyProfile/my-profile';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import Logout from './Components/Logout/Logout';
+import BlogSubmit from './Components/BlogSubmit/BlogSubmit';
 
 
 const App = () => {
@@ -19,9 +20,11 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/myProfile" element={<MyProfilePage />} />
+        <Route path="/blogSubmit" element={<BlogSubmit />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
+
       </Routes>
     </div>
   );
