@@ -70,24 +70,25 @@ html,body {
 }
 
 .blog-container {
+    margin: 5px;
     display: flex; /* Blog kutularını yan yana sıralamak için */
     flex-wrap: wrap; /* Eğer alan yetmiyorsa alt satıra geçsin */
     width: 100%;
-    box-sizing: border-box;
-    
+    box-sizing: border-box;  
+
 }
 
 .blog-box {
     width: calc(33.33% - 20px); /* Her bir blog kutusunun genişliği */
     max-width: 350px; /* Maksimum genişlik */
-    margin: 0 10px 20px; /* Kenar boşlukları */
+    margin: 0 10px ; /* Kenar boşlukları */
     height: 490px;
     text-align: center;
     position: relative;
 }
 
 .mb-3 {
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
 .blog-img {
