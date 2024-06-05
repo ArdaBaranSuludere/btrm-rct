@@ -1,11 +1,10 @@
 from flask import Flask, jsonify,request,session
 from config import app, db
 from models import Blogs,User
-from flask_session import Session
-from flask_login import logout_user
+from flask_login import current_user, login_required, logout_user
 from flask import request
-from flask_cors import CORS
 import traceback, os
+from datetime import datetime
 
 app.secret_key = os.urandom(24)
 
@@ -131,6 +130,33 @@ def internal_error(error):
         'details': str(error),
         'trace': traceback.format_exc()
     }), 500
+
+
+@app.route('/submit_blog', methods=['POST'])
+@login_required  # Sadece oturum açmış kullanıcılar bu görünüme erişebilir
+def submit_blog():
+
+    title = request.json['title']
+    subtitle = request.json['subtitle']
+    category = request.json['category']
+    reading_time = request.json['reading_time']
+    content = request.json['content']
+
+    # Oturum açmış olan kullanıcının kimliğini al
+    author_username = current_user.username
+
+    # Kullanıcı adını kullanarak ilgili kullanıcının id'sini al
+    user = User.query.filter_by(username=author_username).first()
+    author_id = user.id
+
+    # Yeni bir blog nesnesi oluştur ve publish_date ve views değerlerini ayarla
+    new_blog = Blogs(title=title, subtitle=subtitle, category=category, reading_time=reading_time,
+                        content=content, author_id=author_id, author_username=author_username,
+                        publish_date=datetime.now(), views=0)
+
+    # Veritabanına ekle ve değişiklikleri kaydet
+    db.session.add(new_blog)
+    db.session.commit()
 
 
 if __name__ == "__main__":
