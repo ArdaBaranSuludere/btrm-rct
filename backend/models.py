@@ -1,7 +1,5 @@
-from config import db
-from flask import jsonify
+from config import db, ma
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 class User(db.Model):
     table_args = {'extend_existing': True}
@@ -17,20 +15,11 @@ class User(db.Model):
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'is_admin': self.is_admin,
-            'photograph': self.photograph,
-        }
 
-    
 class Blogs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     title = db.Column(db.String(100), nullable=False)
     subtitle = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
@@ -38,12 +27,11 @@ class Blogs(db.Model):
     publish_date = db.Column(db.Date, nullable=False)
     views = db.Column(db.Integer, nullable=False)
     content = db.Column(db.String(2000), nullable=False)
+    category = db.relationship('Category', back_populates="blogs")
     
     @property
     def author_username(self):
         return self.author.username if self.author else None
-
-
 
     @author_username.setter
     def author_username(self, username):
@@ -52,15 +40,22 @@ class Blogs(db.Model):
     def __repr__(self):
         return '<Blog {}>'.format(self.title)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'author_id': self.author_id,
-            'title': self.title,
-            'subtitle': self.subtitle,
-            'category': self.category,
-            'reading_time': self.reading_time,
-            'publish_date': self.publish_date.isoformat() if self.publish_date else None,
-            'views': self.views,
-            'content': self.content,
-        }
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128), nullable=False)
+    photograph = db.Column(db.String(256))
+    blogs = db.relationship("Blogs", back_populates="category")
+
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+
+class BlogsSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Blogs
+
+class CategorySchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Category
+
+    blogs = ma.Nested(BlogsSchema, many=True)
