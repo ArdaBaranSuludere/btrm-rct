@@ -1,6 +1,6 @@
 from flask import Flask, jsonify,request,session
 from config import app, db
-from models import Blogs,User
+from models import Blogs, User, Category, BlogsSchema, CategorySchema, UserSchema
 from flask_login import current_user, login_required, logout_user
 from flask import request
 import traceback, os
@@ -12,21 +12,26 @@ app.secret_key = os.urandom(24)
 @app.route('/api/users', methods=['GET'])
 def get_user():
     users = User.query.all()
-    user_list = [user.to_dict() for user in users]
-
+    user_schema = UserSchema(many=True)
+    user_list = user_schema.dump(users)
     return jsonify(user_list)
-
 
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
     blogs = Blogs.query.all()
-    blogs_list = [blog.to_dict() for blog in blogs]
+    blogs_schema = BlogsSchema(many=True)
+    blogs_list = blogs_schema.dump(blogs)
     return jsonify(blogs_list)
 
+@app.route("/api/categories", methods=['GET'])
+def get_categories():
+    categories = Category.query.all()
+    category_schema = CategorySchema(many=True)
+    category_list = category_schema.dump(categories)
+    return jsonify(category_list)
 
 def find_user(username):
     return User.query.filter_by(username=username).first()
-
 
 @app.route('/api/users/<int:user_id>', methods=['GET'])
 def get_user_by_id(user_id):
@@ -35,22 +40,15 @@ def get_user_by_id(user_id):
         return jsonify(user.to_dict())
     else:
         return jsonify({'message': 'User not found'}), 404
-    
 
 @app.route('/api/user_blogs', methods=['GET'])
 def get_user_blogs():
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({'message': 'User not logged in!'}), 401
-
     blogs = Blogs.query.filter_by(author_id=user_id).all()
-    blogs_list = []
-    for blog in blogs:
-        author = User.query.get(blog.author_id)
-        blog_data = blog.to_dict()
-        blog_data['author_name'] = author.username
-        blogs_list.append(blog_data)
-
+    blogs_schema = BlogsSchema(many=True)
+    blogs_list = blogs_schema.dump(blogs)
     return jsonify(blogs_list), 200
 
 
@@ -150,9 +148,15 @@ def submit_blog():
     author_id = user.id
 
     # Yeni bir blog nesnesi oluştur ve publish_date ve views değerlerini ayarla
-    new_blog = Blogs(title=title, subtitle=subtitle, category=category, reading_time=reading_time,
-                        content=content, author_id=author_id, author_username=author_username,
-                        publish_date=datetime.now(), views=0)
+    new_blog = Blogs(title=title,
+                      subtitle=subtitle,
+                       category=category,
+                        reading_time=reading_time,
+                         content=content,
+                          author_id=author_id,
+                           author_username=author_username,
+                            publish_date=datetime.now(),
+                             views=0)
 
     # Veritabanına ekle ve değişiklikleri kaydet
     db.session.add(new_blog)
