@@ -7,6 +7,7 @@ import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import Logout from './Components/Logout/Logout';
 import BlogSubmit from './Components/BlogSubmit/BlogSubmit';
+import Write from './Components/Write/Write';
 
 
 const App = () => {
@@ -20,7 +21,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/myProfile" element={<MyProfilePage />} />
-        <Route path="/blogSubmit" element={<BlogSubmit />} />
+        <Route path="/Write" element={<Write />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />

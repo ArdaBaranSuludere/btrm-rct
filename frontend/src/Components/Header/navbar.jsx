@@ -28,7 +28,7 @@ const Navbar = () => {
                     )}
                     {isAuthenticated && (
                         <>
-                            <li><Link to="/BlogSubmit">Blog Yaz</Link></li>
+                            <li><Link to="/Write">Blog Yaz</Link></li>
                             <li><Link to="/logout">Logout</Link></li>
                         </>
                     )}
